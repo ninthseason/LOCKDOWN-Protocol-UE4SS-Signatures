@@ -18,7 +18,7 @@
 
 
 
-对新版封锁协议(UE5.5.4)的支持由Kl1nge5(https://steamcommunity.com/id/ninth_season/)提供
+对新版封锁协议(UE5.5.4)的支持由Kl1nge5\(https://steamcommunity.com/id/ninth_season/) 提供
 
 如果你想知道是如何支持新版本的：
 
