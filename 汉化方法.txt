@@ -1,0 +1,9 @@
+**
+汉化方法：
+
+将压缩包中所有文件解压至游戏根目录即可
+
+游戏根目录形如：D:\SteamLibrary\steamapps\common\LOCKDOWN Protocol\LockdownProtocol\Binaries\Win64
+
+解压到Win64文件夹内
+**
