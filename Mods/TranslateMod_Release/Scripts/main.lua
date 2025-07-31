@@ -37,32 +37,29 @@ local function replace()
 
     -- 查找所有可能包含文本的 TextBlock 组件
     local texts = FindAllOf("TextBlock")
-    -- print(texts, "\n")
     if texts and type(texts) == "table" then  -- 确保 texts 有效并且是一个表
         for _, text in pairs(texts) do
-            -- print(text, "\n")
-            if text and type(text) == "userdata" and text.Text and type(text.Text) == "userdata" then
-                -- 安全调用 ToString 方法
-                local success_to_string, original_text = pcall(function() return text.Text:ToString() end)
-                -- print(success_to_string, original_text, "\n")
-                if success_to_string and original_text and original_text ~= "" then
-                    -- 跳过单个字母或数字的文本
-                    if #original_text == 1 and original_text:find("[A-Za-z0-9]") then
-                        goto continue
-                    end
+            if not text:IsValid() then
+                -- for debug
+                -- print("Bad!", text)
+            else
+                if type(text) == "userdata" and text.Text and type(text.Text) == "userdata" then
+                    -- print(1)  -- for debug 这里的两个print是为了拖慢该函数执行的速度，以暴露更多的漏洞面
+                    local success_to_string, original_text = pcall(function() return text.Text:ToString() end)
+                    -- print(2)  -- for debug
+                    if success_to_string and original_text and original_text ~= "" then
+                        -- 跳过单个字母或数字的文本
+                        if #original_text == 1 and original_text:find("[A-Za-z0-9]") then
+                            goto continue
+                        end
 
-                    local sanitized_text = original_text:match("^%s*(.-)%s*$"):gsub("\r", "\\r"):gsub("\n", "\\n")
-                    local new_text = dict[sanitized_text]
-                    -- print(new_text, "\n")
-                    if new_text then
-                        local restored_text = new_text:gsub("\\r", "\r"):gsub("\\n", "\n")
-                        -- print(restored_text, "\n")
-                        if restored_text ~= original_text then
-                            -- local ftext = FText(restored_text)
-                            -- print(ftext)
-                            -- text:SetText(ftext)
-                            pcall(function() text:SetText(FText(restored_text)) end)
-
+                        local sanitized_text = original_text:match("^%s*(.-)%s*$"):gsub("\r", "\\r"):gsub("\n", "\\n")
+                        local new_text = dict[sanitized_text]
+                        if new_text then
+                            local restored_text = new_text:gsub("\\r", "\r"):gsub("\\n", "\n")
+                            if restored_text ~= original_text then
+                                pcall(function() text:SetText(FText(restored_text)) end)
+                            end
                         end
                     end
                 end
@@ -77,6 +74,10 @@ initializeTranslations()
 
 -- 延迟 500 毫秒后启动文本替换功能
 LoopAsync(500, function()
-    -- print(dict["0 PLAYERS BANNED"])
     replace()
 end)
+
+-- RegisterKeyBindAsync(Key.O, function()
+--     -- ExecuteInGameThread(replace)
+--     replace()
+-- end)
